@@ -1,6 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+//default properties of a boid
 
 [CreateAssetMenu]
 public class BoidConfig:ScriptableObject
