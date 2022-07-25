@@ -1,0 +1,41 @@
+#pragma kernel CSMain
+
+struct BoidData
+{
+    float3 position;
+    float3 forward;
+    int SeenMates;
+    float3 FlockCenter;
+    float3 Flockheading;
+    float3 Avoid;
+};
+
+RWStructuredBuffer<BoidData> boidData;
+int n_Boids;
+float VisionRadius;
+float AvoidRadius;
+
+[numthreads(1024,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    for(int i=0; i < n_Boids; i++)
+    {
+        if(i != id.x)
+        {
+            float3 localPos = boidData[i].position - boidData[id.x].position;
+            float sqDist = localPos.x * localPos.x + localPos.y * localPos.y + localPos.z * localPos.z ;
+            if(sqDist < VisionRadius * VisionRadius)
+            {
+                boidData[id.x].SeenMates += 1; 
+                boidData[id.x].FlockCenter += boidData[i].position;
+                boidData[id.x].Flockheading += boidData[i].forward;
+            }
+            if(sqDist < AvoidRadius * AvoidRadius)
+            {
+                boidData[id.x].Avoid += localPos;
+            }
+        }
+    }
+    boidData[id.x].FlockCenter /= boidData[id.x].SeenMates;
+    //boidData[id.x].Flockheading /= boidData[id.x].SeenMates;
+}
