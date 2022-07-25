@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//Generate uniform points on sphere
+//https://mathworld.wolfram.com/SpherePointPicking.html
 public class SphereUniformDistrib
 {
     private readonly int N;
